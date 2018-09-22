@@ -39,20 +39,20 @@ export default class Note extends React.PureComponent {
                         <Text> ... </Text>
                     </TouchableOpacity> */}
                     <MenuProvider style={styles.moreButton}>
-                        <Menu>
-                            <MenuTrigger text="..." />
-                            <MenuOptions>
-                                <MenuOption onSelect={() => alert(`Save`)} text="Save" />
-                                <MenuOption onSelect={() => alert(`Delete`)}>
-                                    <Text style={{ color: 'red' }}>Delete</Text>
-                                </MenuOption>
-                                <MenuOption
-                                    onSelect={() => alert(`Not called`)}
-                                    disabled={true}
-                                    text="Disabled"
-                                />
-                            </MenuOptions>
-                        </Menu>
+                    <Menu>
+                        <MenuTrigger text="..." />
+                        <MenuOptions>
+                            <MenuOption onSelect={() => alert(`Save`)} text="Save" />
+                            <MenuOption onSelect={() => alert(`Delete`)}>
+                                <Text style={{ color: 'red' }}>Delete</Text>
+                            </MenuOption>
+                            <MenuOption
+                                onSelect={() => alert(`Not called`)}
+                                disabled={true}
+                                text="Disabled"
+                            />
+                        </MenuOptions>
+                    </Menu>
                     </MenuProvider>
                 </View>
                 <TextInput
@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
         // borderColor: 'rgba(52, 52, 52, 0.0)',
         backgroundColor: 'rgba(200, 200, 200, 0.5)',
         padding: 5,
-        flex: 5,
     },
     title: {
         flex: 1,
