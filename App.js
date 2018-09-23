@@ -9,6 +9,7 @@ import ArchiveScreen from './src/archiveScreen';
 import SettingsScreen from './src/settingsScreen';
 import Loading from './src/auth/loading';
 import SignupScreen from './src/auth/signupScreen';
+import {YellowBox} from 'react-native'
 
 // import firebase from 'firebase'
 // import firebase from 'react-native-firebase'
@@ -34,7 +35,16 @@ const TabsNav = createBottomTabNavigator({
 },
   {
     initialRouteName: 'Notes',
-  }
+  },
+  {navigationOptions: {
+    headerStyle: {
+      backgroundColor: '#f4511e',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },}
+  },
 );
 
 const SwitchNav = createSwitchNavigator({
@@ -49,6 +59,13 @@ const SwitchNav = createSwitchNavigator({
 );
 
 export default class App extends React.Component {
+  constructor(){
+    super()
+    YellowBox.ignoreWarnings([
+      'Setting a timer',
+      'In most cases you should not have more MenuProviders'
+      ]);
+  }
   render() {
     return <SwitchNav />;
   }

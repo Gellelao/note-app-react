@@ -7,59 +7,85 @@ import {
     MenuOption,
     MenuTrigger,
 } from 'react-native-popup-menu';
+import firebase from '@firebase/app'
+import '@firebase/auth'
+import '@firebase/database'
 
 export default class Note extends React.PureComponent {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //       title: '',
-    //       content: '',
-    //     }
-    //     // this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    //   }
-    state = { title: '', content: '', }
+
+    state = { title: '', content: '', archived: false, date: '' }
+
+    componentDidMount() {
+        this.setState({ content: this.props.content, title: this.props.title, archived: this.props.archived, date: this.props.date })
+    }
+
+    updateNote() {
+        let userId = firebase.auth().currentUser.uid;
+        // let userId = "D3gV8KSUMLhzMZlzP63WAxKtAB13"
+
+        title = this.state.title
+        content = this.state.content
+        date = this.state.date
+        archived = this.state.archived
+        id = this.props.id
+
+        firebase.database().ref('notes/' + userId + '/' + id).set({
+            content: content,
+            title: title,
+            date: date,
+            archived: archived
+        });
+    }
+
+    deleteNote() {
+        let userId = firebase.auth().currentUser.uid;
+        // let userId = "D3gV8KSUMLhzMZlzP63WAxKtAB13"
+        id = this.props.id
+        firebase.database().ref('notes/' + userId + '/' + id).remove();
+    }
+
+    archive() {
+        let userId = firebase.auth().currentUser.uid;
+        // let userId = "D3gV8KSUMLhzMZlzP63WAxKtAB13"
+        
+        this.setState({archived: true})
+        id = this.props.id
+
+        this.updateNote()
+      }
 
     render() {
-        //   const textColor = this.props.selected ? "red" : "black";
-        title = this.props.title
-        content = this.props.content
+        // title = this.props.title
+        // content = this.props.content
         return (
             <View style={styles.container}>
                 <View style={styles.topRow}>
+                    <Text>{this.state.date}</Text>
                     <TextInput
                         style={styles.title}
-                        placeholder={title}
+                        placeholder={"Title"}
                         onChangeText={title => this.setState({ title })}
+                        onSubmitEditing={this.updateNote()}
                         value={this.state.title}
                     />
-                    {/* <TouchableOpacity
-                        style={styles.moreButton}
-                        onPress={this.openMore}
-                    >
-                        <Text> ... </Text>
-                    </TouchableOpacity> */}
                     <MenuProvider style={styles.moreButton}>
-                    <Menu>
-                        <MenuTrigger text="..." />
-                        <MenuOptions>
-                            <MenuOption onSelect={() => alert(`Save`)} text="Save" />
-                            <MenuOption onSelect={() => alert(`Delete`)}>
-                                <Text style={{ color: 'red' }}>Delete</Text>
-                            </MenuOption>
-                            <MenuOption
-                                onSelect={() => alert(`Not called`)}
-                                disabled={true}
-                                text="Disabled"
-                            />
-                        </MenuOptions>
-                    </Menu>
+                        <Menu>
+                            <MenuTrigger text="Options"/>
+                            <MenuOptions>
+                                <MenuOption onSelect={() => this.archive()} text="Archive" />
+                                <MenuOption onSelect={() => this.deleteNote()}>
+                                    <Text style={{ color: 'red' }}>Delete</Text>
+                                </MenuOption>
+                            </MenuOptions>
+                        </Menu>
                     </MenuProvider>
                 </View>
                 <TextInput
                     style={styles.content}
-                    placeholder={content}
+                    placeholder={"Enter note content here..."}
                     onChangeText={content => this.setState({ content })}
                     value={this.state.content}
+                    onSubmitEditing={this.updateNote()}
                 />
             </View>
         );
@@ -75,16 +101,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         borderColor: '#ddd',
-        // borderBottomWidth: 0,
-        // shadowColor: '#000',
-        // shadowOffset: { width: 0, height: 2 },
-        // shadowOpacity: 0.8,
-        // shadowRadius: 2,
         elevation: 3,
         marginLeft: 5,
         marginRight: 5,
         marginTop: 10,
         width: 300,
+        backgroundColor: 'white',
 
     },
     topRow: {
@@ -92,18 +114,14 @@ const styles = StyleSheet.create({
     },
     moreButton: {
         alignItems: 'center',
-        // borderWidth: 1,
-        // elevation: 2,
-        // borderColor: 'rgba(52, 52, 52, 0.0)',
         backgroundColor: 'rgba(200, 200, 200, 0.5)',
         padding: 5,
+        flex: 5,
     },
     title: {
         flex: 1,
         fontWeight: 'bold',
         fontSize: 16,
-        // top: 40,
-        // height: 40,
         borderColor: 'gray',
         borderBottomWidth: 1,
         borderColor: '#ddd',

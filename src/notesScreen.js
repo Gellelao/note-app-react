@@ -2,16 +2,111 @@ import React from 'react';
 import { StyleSheet, View, Text, Button, ListView, FlatList, ListItem } from 'react-native';
 import firebase from '@firebase/app'
 import '@firebase/auth'
+import '@firebase/database'
 import Note from './components/note'
 
 export default class NotesScreen extends React.Component {
+
   constructor(props) {
     super(props);
+
     this.state = {
-      data: [{ title: 'Title', content: 'Enter note here...' }],
+      // data: [{ title: 'Title', content: 'Enter note here...' }],
+      data: [],
       update: false
     }
-    // this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+  }
+
+  componentDidMount() {
+    this.pullActiveNotes()
+  }
+
+  renderIf(condition, content) {
+    if (condition) {
+      return content;
+    } else {
+      return null;
+    }
+  }
+
+  pullActiveNotes() {
+    this.setState({ data: [] })
+    this.state.data = []
+    // let current = this.state.update
+    // console.log("\n\nthis.data length: " + this.state.data.length)
+    // let self = this;
+    // console.log("self.data length: " + self.state.data.length + "\n\n")
+    let userId = firebase.auth().currentUser.uid;
+    // let userId = "D3gV8KSUMLhzMZlzP63WAxKtAB13"
+
+
+
+    // firebase.database().ref('/notes/' + userId).once('value').then(function (snapshot) {
+    //   // this.setState({ data: []})
+    //   snapshot.forEach(function (childSnapshot) {
+    //     // console.log(childSnapshot.val())
+    //     let childData = childSnapshot.val();
+    //     childData.key = childSnapshot.key;
+    //     console.log("\n\nchilSnapshot.key = " + childSnapshot.key + "\n\n")
+    //     self.state.data.push({
+    //       title: childSnapshot.val().title,
+    //       content: childSnapshot.val().content,
+    //       date: childSnapshot.val().date,
+    //       archived: childSnapshot.val().archived,
+    //       id: childSnapshot.key
+    //     })
+    //   });
+    //   self.setState({ update: !current })
+    //   // Keep a reference to the original list for filtering
+    //   // self.originalNoteList = self.noteList;
+    // });
+    let self = this
+    this.tasksReference = firebase
+      .database()
+      .ref('/notes/' + userId).on("value", tasksList => {
+        this.items = [];
+        tasksList.forEach(snap => {
+          this.items.push({
+            title: snap.val().title,
+            content: snap.val().content,
+            date: snap.val().date,
+            archived: snap.val().archived,
+            id: snap.key
+          });
+        });
+        self.setState({ data: this.items })
+      });
+  }
+
+  // createNewNote() {
+  //   let userId = firebase.auth().currentUser.uid;
+  //   // let userId = "D3gV8KSUMLhzMZlzP63WAxKtAB13"
+  //   let today = this.formatDate(new Date());
+  //   let postData = {
+  //     archived: "false",
+  //     content: "",
+  //     title: "",
+  //     date: today
+  //   };
+  //   var newPostKey = firebase.database().ref().child('notes/' + userId).push().key;
+
+  //   // this.state.data.push({ title: 'Title', content: 'Enter note here...', id: newPostKey })
+
+  //   var update = {};
+  //   update['notes/' + userId + '/' + newPostKey] = postData;
+  //   firebase.database().ref().update(update);
+  //   // this.pullActiveNotes()
+  // }
+  createNewNote() {
+    let today = this.formatDate(new Date());
+    let userId = firebase.auth().currentUser.uid;
+    // let taskCategory = this.state.category;
+    firebase.database().ref('/notes/' + userId).push({
+      archived: "false",
+      content: "",
+      title: "",
+      date: ""+today
+    });
   }
 
   render() {
@@ -21,33 +116,27 @@ export default class NotesScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text>Welcome !</Text>
+        <Text>Notes</Text>
         <FlatList
-          // data={this.state.data}
           data={this.state.data}
-          extraData={this.state.update}
-          keyExtractor={(item, index) => index.toString()}
-          // renderItem={
-          //   ({item}) => <Text>{item.name}</Text>
-          //           } 
+          extraData={this.state}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
+            <View>
+              {this.renderIf(!item.archived,
             <Note
-              // id={item.id}
-              // selected={!!this.state.selected.get(item.id)}
-              title={item.title}
-              content={item.content}
-            />
+                title={item.title}
+                content={item.content}
+                archived={item.archived}
+                date={item.date}
+                id={item.id}
+              /> )}
+            </View>
+
+
           )
           }
         />
-        {/* <FlatList
-          data={this.state.data}
-          renderItem={({ item }) => <ListItem title={item.title} />}
-        />
-        <ListView
-          dataSource={this.dataSource.cloneWithRows(this.state.data)}
-          renderRow={(rowData) => <Text>{rowData}</Text>}
-        /> */}
         <Button
           title={"Add Note"}
           onPress={() => this.addNote()}
@@ -57,11 +146,21 @@ export default class NotesScreen extends React.Component {
   }
 
   addNote() {
-    console.log("Add Note!")
-    this.state.data.push({ title: 'Title', content: 'Enter note here...' })
-    // Toggle this to tell the list to update
-    this.setState({update: !this.state.update})
-    console.log(this.state.data)
+    // console.log("Add Note!")
+    // // this.state.data.push({ title: 'Title', content: 'Enter note here...' })
+    // console.log("=============")
+    // console.log(this.state.data.length)
+    // console.log(this.state.data)
+    this.createNewNote()
+
+    // this.refreshList();
+  }
+
+  formatDate(date) {
+    var day = date.getDate();
+    var month = date.getMonth();
+    var year = date.getFullYear();
+    return day + '/' + month + '/' + year;
   }
 }
 
