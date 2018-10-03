@@ -26,7 +26,7 @@ export default class SettingsScreen extends React.Component {
 
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Settings! You are {currentUser && currentUser.email}</Text>
+        <Text>You are logged in as {currentUser && currentUser.email}</Text>
         <Button title="Logout" onPress={this.handleLogout} />
       </View>
     );

@@ -12,8 +12,10 @@ import '@firebase/auth'
 import '@firebase/database'
 
 export default class Note extends React.PureComponent {
-
-    state = { title: '', content: '', archived: false, date: '' }
+    constructor(props){
+        super(props)
+        this.state = { title: this.props.title, content: this.props.content, archived: this.props.archived, date: this.props.date }
+    }
 
     componentDidMount() {
         this.setState({ content: this.props.content, title: this.props.title, archived: this.props.archived, date: this.props.date })
@@ -45,12 +47,7 @@ export default class Note extends React.PureComponent {
     }
 
     archive() {
-        let userId = firebase.auth().currentUser.uid;
-        // let userId = "D3gV8KSUMLhzMZlzP63WAxKtAB13"
-        
-        this.setState({archived: true})
-        id = this.props.id
-
+        this.setState({archived: "true"})
         this.updateNote()
       }
 
@@ -60,7 +57,7 @@ export default class Note extends React.PureComponent {
         return (
             <View style={styles.container}>
                 <View style={styles.topRow}>
-                    <Text>{this.state.date}</Text>
+                    {/* <Text>{this.state.date}</Text>   TODO: format this properly */}
                     <TextInput
                         style={styles.title}
                         placeholder={"Title"}
@@ -70,7 +67,7 @@ export default class Note extends React.PureComponent {
                     />
                     <MenuProvider style={styles.moreButton}>
                         <Menu>
-                            <MenuTrigger text="Options"/>
+                            <MenuTrigger style={styles.moreButtonText} text="More"/>
                             <MenuOptions>
                                 <MenuOption onSelect={() => this.archive()} text="Archive" />
                                 <MenuOption onSelect={() => this.deleteNote()}>
@@ -116,16 +113,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'rgba(200, 200, 200, 0.5)',
         padding: 5,
-        flex: 5,
+        flex: 1,
     },
     title: {
-        flex: 1,
+        flex: 4,
         fontWeight: 'bold',
         fontSize: 16,
         borderColor: 'gray',
         borderBottomWidth: 1,
         borderColor: '#ddd',
         borderRadius: 5,
+    },
+    moreButtonText: {
+        fontSize: 60,
+        // fontWeight: 'bold',
     },
     content: {
         fontSize: 10,

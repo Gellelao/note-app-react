@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, ListView, FlatList, ListItem } from 'react-native';
+import { StyleSheet, View, Text, Button, ListView, FlatList, ListItem, TouchableOpacity } from 'react-native';
 import firebase from '@firebase/app'
 import '@firebase/auth'
 import '@firebase/database'
@@ -102,11 +102,12 @@ export default class NotesScreen extends React.Component {
     let userId = firebase.auth().currentUser.uid;
     // let taskCategory = this.state.category;
     firebase.database().ref('/notes/' + userId).push({
-      archived: "false",
+      archived: "",
       content: "",
       title: "",
-      date: ""+today
+      date: today
     });
+    this.pullActiveNotes()
   }
 
   render() {
@@ -123,24 +124,43 @@ export default class NotesScreen extends React.Component {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View>
-              {this.renderIf(!item.archived,
-            <Note
-                title={item.title}
-                content={item.content}
-                archived={item.archived}
-                date={item.date}
-                id={item.id}
-              /> )}
+              {this.renderIf(!(!!item.archived),
+                <Note
+                  title={item.title}
+                  content={item.content}
+                  archived={item.archived}
+                  date={item.date}
+                  id={item.id}
+                />)}
             </View>
 
 
           )
           }
         />
-        <Button
+        <TouchableOpacity
+          onPress={() => this.addNote()}
+          style={{
+            borderWidth: 1,
+            borderColor: 'rgba(0,0,0,0.2)',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 70,
+            position: 'absolute',
+            bottom: 10,
+            right: 10,
+            height: 70,
+            backgroundColor: '#fff',
+            borderRadius: 100,
+          }}
+        >
+        <Text>+</Text>
+          {/* <Icon name="plus" size={30} color="#01a699" /> */}
+        </TouchableOpacity>
+        {/* <Button
           title={"Add Note"}
           onPress={() => this.addNote()}
-        />
+        /> */}
       </View>
     );
   }

@@ -6,6 +6,7 @@ import '@firebase/database'
 import Note from './components/note'
 
 export default class ArchiveScreen extends React.Component {
+
   constructor(props) {
     super(props);
 
@@ -18,6 +19,7 @@ export default class ArchiveScreen extends React.Component {
 
   componentDidMount() {
     this.pullActiveNotes()
+    
   }
 
 

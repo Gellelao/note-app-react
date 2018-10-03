@@ -63,7 +63,9 @@ export default class App extends React.Component {
     super()
     YellowBox.ignoreWarnings([
       'Setting a timer',
-      'In most cases you should not have more MenuProviders'
+      'In most cases you should not have more MenuProviders',
+      'Warning:'
+      // 'Can\'t call setState (or forecUpdate) on an unmounted component'
       ]);
   }
   render() {
