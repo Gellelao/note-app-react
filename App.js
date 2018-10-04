@@ -28,6 +28,7 @@ if (!firebase.apps.length) {
 }
 // firebase.initializeApp(firebaseConfig);
 
+// About to attempt a new kind of navigation
 const TabsNav = createBottomTabNavigator({
   Notes: NotesScreen,
   Archive: ArchiveScreen,
