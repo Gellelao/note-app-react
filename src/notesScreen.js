@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, ListView, FlatList, ListItem, TouchableOpacity, Alert, Modal, Image } from 'react-native';
+import { StyleSheet, View, Text, Button, ListView, FlatList, ListItem, TouchableOpacity, Alert, Modal, Image, ActivityIndicator } from 'react-native';
 import firebase from '@firebase/app'
 import '@firebase/auth'
 import '@firebase/database'
@@ -11,13 +11,14 @@ export default class NotesScreen extends React.Component {
     super(props);
 
     this.state = {
-      // data: [{ title: 'Title', content: 'Enter note here...' }],
       data: [],
       update: false,
       modalVisible: false,
+      loading: true,
     }
 
-    setTimeout(() => {this.setState({modalVisible: true})}, 3000)
+    // Make the tutorial appear after 3 seconds
+    setTimeout(() => { this.setState({ modalVisible: true }) }, 3000)
   }
 
   componentDidMount() {
@@ -35,34 +36,8 @@ export default class NotesScreen extends React.Component {
   pullActiveNotes() {
     this.setState({ data: [] })
     this.state.data = []
-    // let current = this.state.update
-    // console.log("\n\nthis.data length: " + this.state.data.length)
-    // let self = this;
-    // console.log("self.data length: " + self.state.data.length + "\n\n")
     let userId = firebase.auth().currentUser.uid;
-    // let userId = "D3gV8KSUMLhzMZlzP63WAxKtAB13"
 
-
-
-    // firebase.database().ref('/notes/' + userId).once('value').then(function (snapshot) {
-    //   // this.setState({ data: []})
-    //   snapshot.forEach(function (childSnapshot) {
-    //     // console.log(childSnapshot.val())
-    //     let childData = childSnapshot.val();
-    //     childData.key = childSnapshot.key;
-    //     console.log("\n\nchilSnapshot.key = " + childSnapshot.key + "\n\n")
-    //     self.state.data.push({
-    //       title: childSnapshot.val().title,
-    //       content: childSnapshot.val().content,
-    //       date: childSnapshot.val().date,
-    //       archived: childSnapshot.val().archived,
-    //       id: childSnapshot.key
-    //     })
-    //   });
-    //   self.setState({ update: !current })
-    //   // Keep a reference to the original list for filtering
-    //   // self.originalNoteList = self.noteList;
-    // });
     let self = this
     this.tasksReference = firebase
       .database()
@@ -78,28 +53,10 @@ export default class NotesScreen extends React.Component {
           });
         });
         self.setState({ data: this.items })
+        self.setState({ loading: false })
       });
   }
 
-  // createNewNote() {
-  //   let userId = firebase.auth().currentUser.uid;
-  //   // let userId = "D3gV8KSUMLhzMZlzP63WAxKtAB13"
-  //   let today = this.formatDate(new Date());
-  //   let postData = {
-  //     archived: "false",
-  //     content: "",
-  //     title: "",
-  //     date: today
-  //   };
-  //   var newPostKey = firebase.database().ref().child('notes/' + userId).push().key;
-
-  //   // this.state.data.push({ title: 'Title', content: 'Enter note here...', id: newPostKey })
-
-  //   var update = {};
-  //   update['notes/' + userId + '/' + newPostKey] = postData;
-  //   firebase.database().ref().update(update);
-  //   // this.pullActiveNotes()
-  // }
   createNewNote() {
     let today = this.formatDate(new Date());
     let userId = firebase.auth().currentUser.uid;
@@ -118,93 +75,73 @@ export default class NotesScreen extends React.Component {
   }
 
   render() {
-    // const { navigation } = this.props;
-    // const name = navigation.getParam('name', 'did you enter a name?');
-    // const { currentUser } = this.state;
-    // Alert.alert(
-    //   'Hey!',
-    //   'Welcome, ' + global.name,
-    //   [{ text: 'OK', onPress: () => console.log('OK Pressed') },],
-    //   { cancelable: false }
-    // )
     return (
       <View style={styles.container}>
-      <Modal
-          animationType="slide"
-          transparent={true}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
-          {/* <View style={{ marginTop: 22 }}> */}
-            <View style={ styles.imageContainer }>
-              <TouchableOpacity
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-              <Image
-                source={require('./images/swipe-left-md.png')}
-              />
-              </TouchableOpacity>
-            </View>
-          {/* </View> */}
-        </Modal>
-        <FlatList
-          data={this.state.data}
-          extraData={this.state}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View>
-              {this.renderIf(!(!!item.archived),
-                <Note
-                  title={item.title}
-                  content={item.content}
-                  archived={item.archived}
-                  date={item.date}
-                  id={item.id}
-                />)}
-            </View>
+        {this.state.loading ? <ActivityIndicator size="large" /> :
+          <View>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={this.state.modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+              }}>
+              <View style={styles.imageContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}>
+                  <Image
+                    source={require('./images/swipe-left-md.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+            </Modal>
+            <FlatList
+              data={this.state.data}
+              extraData={this.state}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <View>
+                  {this.renderIf(!(!!item.archived),
+                    <Note
+                      title={item.title}
+                      content={item.content}
+                      archived={item.archived}
+                      date={item.date}
+                      id={item.id}
+                    />)}
+                </View>
 
 
-          )
-          }
-        />
-        <TouchableOpacity
-          onPress={() => this.addNote()}
-          style={{
-            borderWidth: 1,
-            borderColor: 'rgba(0,0,0,0.2)',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 70,
-            position: 'absolute',
-            bottom: 10,
-            right: 10,
-            height: 70,
-            backgroundColor: '#fff',
-            borderRadius: 100,
-          }}
-        >
-        <Text>+</Text>
-          {/* <Icon name="plus" size={30} color="#01a699" /> */}
-        </TouchableOpacity>
-        {/* <Button
-          title={"Add Note"}
-          onPress={() => this.addNote()}
-        /> */}
+              )
+              }
+            />
+            <TouchableOpacity
+              onPress={() => this.addNote()}
+              style={{
+                borderWidth: 1,
+                borderColor: 'rgba(0,0,0,0.2)',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 70,
+                position: 'absolute',
+                bottom: 10,
+                right: 10,
+                height: 70,
+                backgroundColor: '#fff',
+                borderRadius: 100,
+              }}
+            >
+              <Text>+</Text>
+            </TouchableOpacity>
+          </View>}
       </View>
     );
   }
 
   addNote() {
-    // console.log("Add Note!")
-    // // this.state.data.push({ title: 'Title', content: 'Enter note here...' })
-    // console.log("=============")
-    // console.log(this.state.data.length)
-    // console.log(this.state.data)
     this.createNewNote()
-
-    // this.refreshList();
   }
 
   formatDate(date) {
