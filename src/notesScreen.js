@@ -4,6 +4,7 @@ import firebase from '@firebase/app'
 import '@firebase/auth'
 import '@firebase/database'
 import Note from './components/note'
+import { pullNotes } from './helpers';
 
 export default class NotesScreen extends React.Component {
 
@@ -33,28 +34,12 @@ export default class NotesScreen extends React.Component {
     }
   }
 
-  pullActiveNotes() {
+  async pullActiveNotes() {
     this.setState({ data: [] })
     this.state.data = []
-    let userId = firebase.auth().currentUser.uid;
-
-    let self = this
-    this.tasksReference = firebase
-      .database()
-      .ref('/notes/' + userId).on("value", tasksList => {
-        this.items = [];
-        tasksList.forEach(snap => {
-          this.items.push({
-            title: snap.val().title,
-            content: snap.val().content,
-            date: snap.val().date,
-            archived: snap.val().archived,
-            id: snap.key
-          });
-        });
-        self.setState({ data: this.items })
-        self.setState({ loading: false })
-      });
+    const items = await this.pullNotes()
+    this.setState({ data: items })
+    this.setState({ loading: false })
   }
 
   createNewNote() {
