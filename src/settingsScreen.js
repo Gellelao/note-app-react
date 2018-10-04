@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, Modal, TouchableHighlight, Image, StyleSheet } from 'react-native';
 import firebase from '@firebase/app'
 import '@firebase/auth'
 

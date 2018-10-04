@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, ListView, FlatList, ListItem, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Button, ListView, FlatList, ListItem, TouchableOpacity, Alert, Modal, Image } from 'react-native';
 import firebase from '@firebase/app'
 import '@firebase/auth'
 import '@firebase/database'
@@ -13,8 +13,11 @@ export default class NotesScreen extends React.Component {
     this.state = {
       // data: [{ title: 'Title', content: 'Enter note here...' }],
       data: [],
-      update: false
+      update: false,
+      modalVisible: false,
     }
+
+    setTimeout(() => {this.setState({modalVisible: true})}, 3000)
   }
 
   componentDidMount() {
@@ -110,13 +113,42 @@ export default class NotesScreen extends React.Component {
     this.pullActiveNotes()
   }
 
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
+
   render() {
     // const { navigation } = this.props;
     // const name = navigation.getParam('name', 'did you enter a name?');
     // const { currentUser } = this.state;
-
+    // Alert.alert(
+    //   'Hey!',
+    //   'Welcome, ' + global.name,
+    //   [{ text: 'OK', onPress: () => console.log('OK Pressed') },],
+    //   { cancelable: false }
+    // )
     return (
       <View style={styles.container}>
+      <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          {/* <View style={{ marginTop: 22 }}> */}
+            <View style={ styles.imageContainer }>
+              <TouchableOpacity
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+              <Image
+                source={require('./images/swipe-left-md.png')}
+              />
+              </TouchableOpacity>
+            </View>
+          {/* </View> */}
+        </Modal>
         <FlatList
           data={this.state.data}
           extraData={this.state}
@@ -188,5 +220,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  imageContainer: {
+    // width: 50, 
+    // height: 50,
+    marginTop: 75,
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 })

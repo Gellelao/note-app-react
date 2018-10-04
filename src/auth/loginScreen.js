@@ -43,8 +43,9 @@ export default class Login extends React.Component {
           value={this.state.password}
         />
         <Button title="Login" onPress={this.handleLogin} />
+        <Text style={styles.padTop}>Don't have an account?</Text>
         <Button
-          title="Don't have an account? Sign Up"
+          title="Sign Up"
           onPress={() => this.props.navigation.navigate('SignupScreen')}
         />
       </View>
@@ -64,5 +65,8 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     marginTop: 8
+  },
+  padTop: {
+    marginTop: 80
   }
 })
