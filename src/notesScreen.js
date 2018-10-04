@@ -117,7 +117,6 @@ export default class NotesScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text>Notes</Text>
         <FlatList
           data={this.state.data}
           extraData={this.state}

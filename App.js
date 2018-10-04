@@ -1,7 +1,7 @@
 import React from 'react';
 // import { createSwitchNavigator } from 'react-navigation';
 import { createSwitchNavigator } from 'react-navigation'
-import { createBottomTabNavigator } from 'react-navigation';
+import { createMaterialTopTabNavigator } from 'react-navigation';
 
 import LoginScreen from './src/auth/loginScreen';
 import NotesScreen from './src/notesScreen';
@@ -29,7 +29,7 @@ if (!firebase.apps.length) {
 // firebase.initializeApp(firebaseConfig);
 
 // About to attempt a new kind of navigation
-const TabsNav = createBottomTabNavigator({
+const TabsNav = createMaterialTopTabNavigator({
   Notes: NotesScreen,
   Archive: ArchiveScreen,
   Settings: SettingsScreen,

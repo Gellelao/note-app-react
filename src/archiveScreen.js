@@ -61,7 +61,6 @@ export default class ArchiveScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text>Archive</Text>
         <FlatList
           data={this.state.data}
           extraData={this.state}
