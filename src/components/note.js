@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
 import {
     MenuProvider,
     Menu,
@@ -7,9 +7,8 @@ import {
     MenuOption,
     MenuTrigger,
 } from 'react-native-popup-menu';
-import firebase from '@firebase/app'
-import '@firebase/auth'
-import '@firebase/database'
+import { update } from '../data/firebaseProvider'
+import { deleteN } from '../data/firebaseProvider'
 
 export default class Note extends React.PureComponent {
     constructor(props){
@@ -22,28 +21,19 @@ export default class Note extends React.PureComponent {
     }
 
     updateNote() {
-        let userId = firebase.auth().currentUser.uid;
-        // let userId = "D3gV8KSUMLhzMZlzP63WAxKtAB13"
+        data = ({
+            title: this.state.title,
+            content: this.state.content,
+            date: this.state.date,
+            archived: this.state.archived,
+            id: this.props.id,
+        })
 
-        title = this.state.title
-        content = this.state.content
-        date = this.state.date
-        archived = this.state.archived
-        id = this.props.id
-
-        firebase.database().ref('notes/' + userId + '/' + id).set({
-            content: content,
-            title: title,
-            date: date,
-            archived: archived
-        });
+        update(data)
     }
 
     deleteNote() {
-        let userId = firebase.auth().currentUser.uid;
-        // let userId = "D3gV8KSUMLhzMZlzP63WAxKtAB13"
-        id = this.props.id
-        firebase.database().ref('notes/' + userId + '/' + id).remove();
+        deleteN(this.props.id)
     }
 
     archive() {
@@ -52,8 +42,6 @@ export default class Note extends React.PureComponent {
       }
 
     render() {
-        // title = this.props.title
-        // content = this.props.content
         return (
             <View style={styles.container}>
                 <View style={styles.topRow}>
@@ -126,7 +114,6 @@ const styles = StyleSheet.create({
     },
     moreButtonText: {
         fontSize: 60,
-        // fontWeight: 'bold',
     },
     content: {
         fontSize: 10,

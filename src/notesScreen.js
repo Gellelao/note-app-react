@@ -1,10 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, ListView, FlatList, ListItem, TouchableOpacity, Alert, Modal, Image, ActivityIndicator } from 'react-native';
-import firebase from '@firebase/app'
-import '@firebase/auth'
-import '@firebase/database'
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert, Modal, Image, ActivityIndicator } from 'react-native';
 import Note from './components/note'
-import { pullNotes } from './helpers';
+import { pullNotes } from './data/firebaseProvider';
+import { addNote } from './data/firebaseProvider'
 
 export default class NotesScreen extends React.Component {
 
@@ -23,7 +21,7 @@ export default class NotesScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.pullActiveNotes()
+    pullNotes(this)
   }
 
   renderIf(condition, content) {
@@ -34,25 +32,9 @@ export default class NotesScreen extends React.Component {
     }
   }
 
-  async pullActiveNotes() {
-    this.setState({ data: [] })
-    this.state.data = []
-    const items = await this.pullNotes()
-    this.setState({ data: items })
-    this.setState({ loading: false })
-  }
-
   createNewNote() {
     let today = this.formatDate(new Date());
-    let userId = firebase.auth().currentUser.uid;
-    // let taskCategory = this.state.category;
-    firebase.database().ref('/notes/' + userId).push({
-      archived: "",
-      content: "",
-      title: "",
-      date: today
-    });
-    this.pullActiveNotes()
+    addNote(today)
   }
 
   setModalVisible(visible) {
@@ -97,10 +79,7 @@ export default class NotesScreen extends React.Component {
                       id={item.id}
                     />)}
                 </View>
-
-
-              )
-              }
+              )}
             />
             <TouchableOpacity
               onPress={() => this.addNote()}
@@ -144,8 +123,6 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   imageContainer: {
-    // width: 50, 
-    // height: 50,
     marginTop: 75,
     flex: 2,
     justifyContent: 'center',

@@ -1,5 +1,4 @@
 import React from 'react';
-// import { createSwitchNavigator } from 'react-navigation';
 import { createSwitchNavigator } from 'react-navigation'
 import { createMaterialTopTabNavigator } from 'react-navigation';
 
@@ -11,8 +10,6 @@ import Loading from './src/auth/loading';
 import SignupScreen from './src/auth/signupScreen';
 import {YellowBox} from 'react-native'
 
-// import firebase from 'firebase'
-// import firebase from 'react-native-firebase'
 import firebase from '@firebase/app'
 import '@firebase/auth'
 
@@ -26,9 +23,7 @@ const firebaseConfig = {
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
-// firebase.initializeApp(firebaseConfig);
 
-// About to attempt a new kind of navigation
 const TabsNav = createMaterialTopTabNavigator({
   Notes: NotesScreen,
   Archive: ArchiveScreen,
@@ -66,7 +61,7 @@ export default class App extends React.Component {
       'Setting a timer',
       'In most cases you should not have more MenuProviders',
       'Warning:'
-      // 'Can\'t call setState (or forecUpdate) on an unmounted component'
+      // 'Can\'t call setState (or forceUpdate) on an unmounted component'
       ]);
   }
   render() {

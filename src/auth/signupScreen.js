@@ -7,7 +7,6 @@ import firebase from '@firebase/app';
 import '@firebase/auth'
 export default class SignUp extends React.Component {
 
-  // _isMounted = false;
   state = { email: '', password: '', errorMessage: null }
 
   handleSignUp = () => {
@@ -17,14 +16,6 @@ export default class SignUp extends React.Component {
       .then(() => this.props.navigation.navigate('Tabs'))
       .catch(error => this.setState({ errorMessage: error.message }))
   }
-
-  // componentDidMount() {
-  //   this._isMounted = true;
-  // }
-
-  // componentWillUnmount(){
-  //   this._isMounted = false;
-  // }
 
   render() {
     return (

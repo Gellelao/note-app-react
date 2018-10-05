@@ -1,9 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, ListView, FlatList, ListItem } from 'react-native';
-import firebase from '@firebase/app'
-import '@firebase/auth'
-import '@firebase/database'
+import { StyleSheet, View, FlatList } from 'react-native';
 import Note from './components/note'
+import { pullNotes } from './data/firebaseProvider';
 
 export default class ArchiveScreen extends React.Component {
 
@@ -11,15 +9,13 @@ export default class ArchiveScreen extends React.Component {
     super(props);
 
     this.state = {
-      // data: [{ title: 'Title', content: 'Enter note here...' }],
       data: [],
-      update: false
+      update: false,
     }
   }
 
   componentDidMount() {
-    this.pullActiveNotes()
-    
+    pullNotes(this);
   }
 
 
@@ -31,34 +27,7 @@ export default class ArchiveScreen extends React.Component {
     }
   }
 
-  pullActiveNotes() {
-    this.setState({ data: [] })
-    this.state.data = []
-    
-    let userId = firebase.auth().currentUser.uid;
-    let self = this
-    this.tasksReference = firebase
-      .database()
-      .ref('/notes/' + userId).on("value", tasksList => {
-        this.items = [];
-        tasksList.forEach(snap => {
-          this.items.push({
-            title: snap.val().title,
-            content: snap.val().content,
-            date: snap.val().date,
-            archived: snap.val().archived,
-            id: snap.key
-          });
-        });
-        self.setState({ data: this.items })
-      });
-  }
-
   render() {
-    // const { navigation } = this.props;
-    // const name = navigation.getParam('name', 'did you enter a name?');
-    // const { currentUser } = this.state;
-
     return (
       <View style={styles.container}>
         <FlatList
@@ -76,10 +45,7 @@ export default class ArchiveScreen extends React.Component {
                 id={item.id}
               /> )}
             </View>
-
-
-          )
-          }
+          )}
         />
       </View>
     );
