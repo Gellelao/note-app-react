@@ -2,9 +2,11 @@
 // https://medium.com/react-native-training/react-native-firebase-authentication-7652e1d2c8a2
 
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native'
+import { Text, TextInput, View, Button } from 'react-native'
 import firebase from '@firebase/app';
 import '@firebase/auth'
+import commonStyles from '../style/commonStyle'
+
 export default class SignUp extends React.Component {
 
   state = { email: '', password: '', errorMessage: null }
@@ -19,7 +21,7 @@ export default class SignUp extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={commonStyles.container}>
         <Text>Sign Up</Text>
         {this.state.errorMessage &&
           <Text style={{ color: 'red' }}>
@@ -28,7 +30,7 @@ export default class SignUp extends React.Component {
         <TextInput
           placeholder="Email"
           autoCapitalize="none"
-          style={styles.textInput}
+          style={commonStyles.textInput}
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
         />
@@ -36,7 +38,7 @@ export default class SignUp extends React.Component {
           secureTextEntry
           placeholder="Password"
           autoCapitalize="none"
-          style={styles.textInput}
+          style={commonStyles.textInput}
           onChangeText={password => this.setState({ password })}
           value={this.state.password}
         />
@@ -49,18 +51,3 @@ export default class SignUp extends React.Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  textInput: {
-    height: 40,
-    width: '90%',
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginTop: 8
-  }
-})

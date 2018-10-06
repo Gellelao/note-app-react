@@ -11,7 +11,7 @@ import { updateNote } from '../data/firebaseProvider'
 import { deleteNote } from '../data/firebaseProvider'
 
 export default class Note extends React.PureComponent {
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = { title: this.props.title, content: this.props.content, archived: this.props.archived, date: this.props.date }
     }
@@ -37,15 +37,14 @@ export default class Note extends React.PureComponent {
     }
 
     archive() {
-        this.setState({archived: "true"})
+        this.setState({ archived: "true" })
         this.update()
-      }
+    }
 
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.topRow}>
-                    {/* <Text>{this.state.date}</Text>   TODO: format this properly */}
                     <TextInput
                         style={styles.title}
                         placeholder={"Title"}
@@ -55,7 +54,7 @@ export default class Note extends React.PureComponent {
                     />
                     <MenuProvider style={styles.moreButton}>
                         <Menu>
-                            <MenuTrigger style={styles.moreButtonText} text="More"/>
+                            <MenuTrigger style={styles.moreButtonText} text="..." />
                             <MenuOptions>
                                 <MenuOption onSelect={() => this.archive()} text="Archive" />
                                 <MenuOption onSelect={() => this.delete()}>
@@ -72,12 +71,10 @@ export default class Note extends React.PureComponent {
                     value={this.state.content}
                     onSubmitEditing={this.update()}
                 />
+
+                <Text style={styles.date}>{this.state.date}</Text>
             </View>
         );
-    }
-
-    openMore() {
-        console.log("MORE")
     }
 }
 
@@ -100,7 +97,6 @@ const styles = StyleSheet.create({
     moreButton: {
         alignItems: 'center',
         backgroundColor: 'rgba(200, 200, 200, 0.5)',
-        padding: 5,
         flex: 1,
     },
     title: {
@@ -113,9 +109,15 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     moreButtonText: {
-        fontSize: 60,
+        padding: 20,
+        fontSize: 150,
     },
     content: {
         fontSize: 10,
+    },
+    date: {
+        fontSize: 10,
+        left: 250,
+        color: 'gray',
     },
 })

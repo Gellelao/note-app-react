@@ -5,11 +5,12 @@ import React from 'react'
 import { StyleSheet, Text, TextInput, View, Button } from 'react-native'
 import firebase from '@firebase/app'
 import '@firebase/auth'
+import commonStyles from '../style/commonStyle'
 
 export default class Login extends React.Component {
 
   state = { email: '', password: '', errorMessage: null }
-  
+
   handleLogin = () => {
     const { email, password } = this.state
     firebase
@@ -21,14 +22,14 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={commonStyles.container}>
         <Text>Login</Text>
         {this.state.errorMessage &&
           <Text style={{ color: 'red' }}>
             {this.state.errorMessage}
           </Text>}
         <TextInput
-          style={styles.textInput}
+          style={commonStyles.textInput}
           autoCapitalize="none"
           placeholder="Email"
           onChangeText={email => this.setState({ email })}
@@ -36,7 +37,7 @@ export default class Login extends React.Component {
         />
         <TextInput
           secureTextEntry
-          style={styles.textInput}
+          style={commonStyles.textInput}
           autoCapitalize="none"
           placeholder="Password"
           onChangeText={password => this.setState({ password })}
@@ -54,18 +55,6 @@ export default class Login extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  textInput: {
-    height: 40,
-    width: '90%',
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginTop: 8
-  },
   padTop: {
     marginTop: 80
   }

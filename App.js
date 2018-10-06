@@ -8,7 +8,7 @@ import ArchiveScreen from './src/archiveScreen';
 import SettingsScreen from './src/settingsScreen';
 import Loading from './src/auth/loading';
 import SignupScreen from './src/auth/signupScreen';
-import {YellowBox} from 'react-native'
+import { YellowBox } from 'react-native'
 
 import firebase from '@firebase/app'
 import '@firebase/auth'
@@ -32,14 +32,16 @@ const TabsNav = createMaterialTopTabNavigator({
   {
     initialRouteName: 'Notes',
   },
-  {navigationOptions: {
-    headerStyle: {
-      backgroundColor: '#f4511e',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },}
+  {
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#f4511e',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }
   },
 );
 
@@ -55,14 +57,14 @@ const SwitchNav = createSwitchNavigator({
 );
 
 export default class App extends React.Component {
-  constructor(){
+  constructor() {
     super()
     YellowBox.ignoreWarnings([
       'Setting a timer',
       'In most cases you should not have more MenuProviders',
       'Warning:'
       // 'Can\'t call setState (or forceUpdate) on an unmounted component'
-      ]);
+    ]);
   }
   render() {
     return <SwitchNav />;

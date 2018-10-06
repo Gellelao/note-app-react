@@ -4,6 +4,7 @@ import SearchableFlatlist from "searchable-flatlist";
 import Note from './components/note'
 import { pullNotes } from './data/firebaseProvider';
 import { addNote } from './data/firebaseProvider'
+import commonStyles from './style/commonStyle'
 
 export default class NotesScreen extends React.Component {
 
@@ -49,7 +50,7 @@ export default class NotesScreen extends React.Component {
         {this.state.loading ? <ActivityIndicator size="large" /> :
           <View>
 
-            <View style={styles.filler}></View>
+            <View style={commonStyles.filler}></View>
             <Modal
               animationType="slide"
               transparent={true}
@@ -87,27 +88,21 @@ export default class NotesScreen extends React.Component {
                 </View>
               )}
             />
-            <View style={styles.topRow}>
-              <TextInput
-                placeholder={"Search"}
-                style={styles.sSearchBar}
-                onChangeText={searchTerm => this.setState({ searchTerm })}
-              />
-              <TouchableOpacity
-                onPress={() => this.addNote()}
-                style={styles.plusButton}
-              >
-                <Text>+</Text>
-              </TouchableOpacity>
-            </View>
+            <TextInput
+              placeholder={"Search"}
+              style={commonStyles.sSearchBar}
+              onChangeText={searchTerm => this.setState({ searchTerm })}
+            />
+            <TouchableOpacity
+              onPress={() => this.createNewNote()}
+              style={styles.plusButton}
+            >
+              <Text>+</Text>
+            </TouchableOpacity>
           </View>
         }
       </View>
     );
-  }
-
-  addNote() {
-    this.createNewNote()
   }
 
   formatDate(date) {
@@ -131,46 +126,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  topRow: {
-    flexDirection: 'row'
-  },
-  sSearchBar: {
-    // flexDirection: 'row',
-    // flex: 3,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    paddingHorizontal: 10,
-    margin: 15,
-    height: 70,
-    width: 150,
-    left: 30,
-    borderColor: "gray",
-    borderWidth: 1,
-    borderRadius: 5,
-    fontSize: 18
-  },
   plusButton: {
-    // flexDirection: 'row',
-    // flex: 1,
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.2)',
     alignItems: 'center',
     justifyContent: 'center',
     width: 70,
     position: 'absolute',
-    bottom: 10,
+    bottom: 15,
     right: 10,
     height: 70,
     backgroundColor: '#fff',
     borderRadius: 100,
-  },
-  filler: {
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: 'rgba(0,0,0,0.0)',
-    marginLeft: 5,
-    marginRight: 5,
-    marginTop: 10,
-    width: 300,
-
   },
 })
