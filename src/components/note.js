@@ -7,8 +7,8 @@ import {
     MenuOption,
     MenuTrigger,
 } from 'react-native-popup-menu';
-import { update } from '../data/firebaseProvider'
-import { deleteN } from '../data/firebaseProvider'
+import { updateNote } from '../data/firebaseProvider'
+import { deleteNote } from '../data/firebaseProvider'
 
 export default class Note extends React.PureComponent {
     constructor(props){
@@ -20,7 +20,7 @@ export default class Note extends React.PureComponent {
         this.setState({ content: this.props.content, title: this.props.title, archived: this.props.archived, date: this.props.date })
     }
 
-    updateNote() {
+    update() {
         data = ({
             title: this.state.title,
             content: this.state.content,
@@ -29,16 +29,16 @@ export default class Note extends React.PureComponent {
             id: this.props.id,
         })
 
-        update(data)
+        updateNote(data)
     }
 
-    deleteNote() {
-        deleteN(this.props.id)
+    delete() {
+        deleteNote(this.props.id)
     }
 
     archive() {
         this.setState({archived: "true"})
-        this.updateNote()
+        this.update()
       }
 
     render() {
@@ -50,7 +50,7 @@ export default class Note extends React.PureComponent {
                         style={styles.title}
                         placeholder={"Title"}
                         onChangeText={title => this.setState({ title })}
-                        onSubmitEditing={this.updateNote()}
+                        onSubmitEditing={this.update()}
                         value={this.state.title}
                     />
                     <MenuProvider style={styles.moreButton}>
@@ -58,7 +58,7 @@ export default class Note extends React.PureComponent {
                             <MenuTrigger style={styles.moreButtonText} text="More"/>
                             <MenuOptions>
                                 <MenuOption onSelect={() => this.archive()} text="Archive" />
-                                <MenuOption onSelect={() => this.deleteNote()}>
+                                <MenuOption onSelect={() => this.delete()}>
                                     <Text style={{ color: 'red' }}>Delete</Text>
                                 </MenuOption>
                             </MenuOptions>
@@ -70,7 +70,7 @@ export default class Note extends React.PureComponent {
                     placeholder={"Enter note content here..."}
                     onChangeText={content => this.setState({ content })}
                     value={this.state.content}
-                    onSubmitEditing={this.updateNote()}
+                    onSubmitEditing={this.update()}
                 />
             </View>
         );

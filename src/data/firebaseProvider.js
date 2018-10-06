@@ -34,7 +34,7 @@ export function addNote(today) {
     });
 }
 
-export function update(data) {
+export function updateNote(data) {
     let userId = firebase.auth().currentUser.uid;
 
     firebase.database().ref('notes/' + userId + '/' + data.id).set({
@@ -45,7 +45,7 @@ export function update(data) {
     });
 }
 
-export function deleteN(id) {
+export function deleteNote(id) {
     let userId = firebase.auth().currentUser.uid;
     firebase.database().ref('notes/' + userId + '/' + id).remove();
 }
