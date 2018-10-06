@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, View, TextInput, FlatList } from 'react-native';
+import SearchableFlatlist from "searchable-flatlist";
 import Note from './components/note'
 import { pullNotes } from './data/firebaseProvider';
 
@@ -11,6 +12,7 @@ export default class ArchiveScreen extends React.Component {
     this.state = {
       data: [],
       update: false,
+      searchTerm: ""
     }
   }
 
@@ -30,7 +32,9 @@ export default class ArchiveScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <FlatList
+        <SearchableFlatlist
+          searchProperty={"content"}
+          searchTerm={this.state.searchTerm}
           data={this.state.data}
           extraData={this.state}
           keyExtractor={(item) => item.id}
@@ -47,6 +51,11 @@ export default class ArchiveScreen extends React.Component {
             </View>
           )}
         />
+        <TextInput
+          placeholder={"Search"}
+          style={styles.sSearchBar}
+          onChangeText={searchTerm => this.setState({ searchTerm })}
+        />
       </View>
     );
   }
@@ -57,5 +66,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 200, 0.5)',
+  },
+  sContainer: {
+    flex: 1,
+    backgroundColor: "#F5FCFF"
+  },
+  sTextItem: {
+    height: 50,
+    width: "100%",
+    textAlign: "center",
+    textAlignVertical: "center",
+    fontSize: 18
+  },
+  sSearchBar: {
+    paddingHorizontal: 10,
+    margin: 10,
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 1,
+    fontSize: 18
   }
 })
