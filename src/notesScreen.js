@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert, Modal, Image, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, Modal, Image, ActivityIndicator } from 'react-native';
+import SearchableFlatlist from "searchable-flatlist";
 import Note from './components/note'
 import { pullNotes } from './data/firebaseProvider';
 import { addNote } from './data/firebaseProvider'
@@ -14,6 +15,7 @@ export default class NotesScreen extends React.Component {
       update: false,
       modalVisible: false,
       loading: true,
+      searchTerm: "",
     }
 
     // Make the tutorial appear after 3 seconds
@@ -46,6 +48,8 @@ export default class NotesScreen extends React.Component {
       <View style={styles.container}>
         {this.state.loading ? <ActivityIndicator size="large" /> :
           <View>
+
+            <View style={styles.filler}></View>
             <Modal
               animationType="slide"
               transparent={true}
@@ -64,7 +68,9 @@ export default class NotesScreen extends React.Component {
                 </TouchableOpacity>
               </View>
             </Modal>
-            <FlatList
+            <SearchableFlatlist
+              searchProperty={"content"}
+              searchTerm={this.state.searchTerm}
               data={this.state.data}
               extraData={this.state}
               keyExtractor={(item) => item.id}
@@ -81,25 +87,21 @@ export default class NotesScreen extends React.Component {
                 </View>
               )}
             />
-            <TouchableOpacity
-              onPress={() => this.addNote()}
-              style={{
-                borderWidth: 1,
-                borderColor: 'rgba(0,0,0,0.2)',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 70,
-                position: 'absolute',
-                bottom: 10,
-                right: 10,
-                height: 70,
-                backgroundColor: '#fff',
-                borderRadius: 100,
-              }}
-            >
-              <Text>+</Text>
-            </TouchableOpacity>
-          </View>}
+            <View style={styles.topRow}>
+              <TextInput
+                placeholder={"Search"}
+                style={styles.sSearchBar}
+                onChangeText={searchTerm => this.setState({ searchTerm })}
+              />
+              <TouchableOpacity
+                onPress={() => this.addNote()}
+                style={styles.plusButton}
+              >
+                <Text>+</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        }
       </View>
     );
   }
@@ -118,14 +120,57 @@ export default class NotesScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: 'rgba(230, 230, 230, 0.5)',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   imageContainer: {
     marginTop: 75,
     flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
+  topRow: {
+    flexDirection: 'row'
+  },
+  sSearchBar: {
+    // flexDirection: 'row',
+    // flex: 3,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    paddingHorizontal: 10,
+    margin: 15,
+    height: 70,
+    width: 150,
+    left: 30,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    fontSize: 18
+  },
+  plusButton: {
+    // flexDirection: 'row',
+    // flex: 1,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 70,
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    height: 70,
+    backgroundColor: '#fff',
+    borderRadius: 100,
+  },
+  filler: {
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: 'rgba(0,0,0,0.0)',
+    marginLeft: 5,
+    marginRight: 5,
+    marginTop: 10,
+    width: 300,
+
+  },
 })
