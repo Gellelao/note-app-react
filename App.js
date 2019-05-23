@@ -15,7 +15,7 @@ import '@firebase/auth'
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyCL0beLuuqZjH_S9lB0Bv2uhe3wQ9MZAr4",
+  apiKey: "",
   authDomain: "swen325ionic.firebaseapp.com",
   databaseURL: "https://swen325ionic.firebaseio.com",
   storageBucket: "swen325ionic.appspot.com"
